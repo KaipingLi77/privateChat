@@ -5,26 +5,49 @@ import org.springframework.stereotype.Component;
 @Component
 public class User {
     private int id;
-    private String firstName;
-    private String lastName;
-    private String phone;
-    private String position;
-    
-    public int getId(){
+    private String NickName;
+    private String WelcomeMessage;
+    private String LeavingMessage;
+    private int iconId;
+
+    public int getId() {
         return id;
     }
 
-    public void setId(int id){
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getFirstName(){
-        return firstName;
+    public String getNicKName() {
+        return NickName;
     }
 
-    public void setFirstName(){
-        this.firstName = firstName
+    public void setFirstName(String name) {
+        this.NickName = name;
     }
 
-    
+    public String getWelcomeMessage() {
+        return WelcomeMessage;
+    }
+
+    public void setWelcomeMessage(String WelcomeMessage) {
+        this.WelcomeMessage = WelcomeMessage;
+    }
+
+    public String LeavingMessage() {
+        return LeavingMessage;
+    }
+
+    public void setLeavingMessage(String LeavingMessage) {
+        this.LeavingMessage = LeavingMessage;
+    }
+
+    public int getIconId() {
+        return iconId;
+    }
+
+    public void setIconId(int id) {
+        this.iconId = id;
+    }
+
 }
