@@ -1,10 +1,11 @@
 package com.huge.Model.WebSocket;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import jakarta.websocket.RemoteEndpoint.Async;
-import jakarta.websocket.Session;;
+import jakarta.websocket.Session;
 
 public class WebSocketUtil {
     private static final Map<String, Session> Online_Session = new ConcurrentHashMap<String, Session>();
@@ -14,11 +15,16 @@ public class WebSocketUtil {
     }
 
     public static void SendMessage(Session session, String msg) {
-        if (session == null) {
-            return;
+        try {
+            if (session == null) {
+                return;
+            }
+            synchronized (Online_Session) {
+                session.getBasicRemote().sendText(msg);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        Async async = session.getAsyncRemote();
-        async.sendText(msg);
     }
 
     public static void sendMessageToAll(String message) {
@@ -27,6 +33,10 @@ public class WebSocketUtil {
 
     public static void leave(String nickname) {
         Online_Session.remove(nickname);
+    }
+
+    public static List<String> getOnlineUser() {
+        return new ArrayList<String>(Online_Session.keySet());
     }
 
 }
