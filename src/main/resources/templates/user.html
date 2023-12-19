@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head> 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link th:href="@{/css/userPage.css}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+ </head>   
+<body>
+<!--Div for Background-->
+<div class="bg text-center">
+
+    <!--Div for Centered Text & Input--> 
+    <div class="centered">
+        <form action="/chatroom/chat" method="post">
+     
+       <p class="firstLine"> JOIN </p>
+     
+      <p class="secondLine">The Simplest Chat room</p>
+  
+      <p> <input class="InputStyle" name="nickName" placeholder="Enter your Nick name        
+                              &#xf007; " style="font-family:Arial, FontAwesome" type="text"> </p>
+      <p> <input class="InputStyle" name="welcomeMsg" placeholder="Personalized welcome message        
+             &#xf52b; " style="font-family:Arial, FontAwesome" type="text"> </p>
+     <p> <input class="InputStyle" name="quitMsg" placeholder="Personalized Quit message        
+                  &#xe552; " style="font-family:Arial, FontAwesome" type="text"> </p>     
+                  <p>
+                    <button type="submit" >Enter!</button>
+                  </p>                   
+                </form>
+      </div>
+  
+      <!--Div for bottom Icons-->
+  <div class="social-btn">
+              <a href="#"  title="Facebook"><i class="fa fa-facebook"></i></a>
+              <a href="#"  title="Twitter"><i class="fa fa-twitter"></i></a>
+          
+  </div>
+     
+    </div>
+  
+</body>
+</html>

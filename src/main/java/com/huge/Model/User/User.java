@@ -1,28 +1,36 @@
-package com.huge.Model;
+package com.huge.Model.User;
 
-import org.springframework.stereotype.Component;
+import java.util.Random;
+import java.util.UUID;
 
-@Component
 public class User {
-    private int id;
+    private String id;
     private String NickName;
     private String WelcomeMessage;
     private String LeavingMessage;
     private int iconId;
 
-    public int getId() {
-        return id;
+    public User() {
+
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public User(String NickName, String WelcomeMessage, String quitMsg) {
+        this.id = UUID.randomUUID().toString();
+        this.NickName = NickName;
+        this.WelcomeMessage = WelcomeMessage;
+        this.LeavingMessage = quitMsg;
+        this.iconId = new Random().nextInt(6) + 1;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getNicKName() {
         return NickName;
     }
 
-    public void setFirstName(String name) {
+    public void setNickName(String name) {
         this.NickName = name;
     }
 

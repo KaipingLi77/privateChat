@@ -10,35 +10,13 @@
 <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.6.8-fix/jquery.nicescroll.min.js"></script>
-<script>
+<script th:inline="javascript">
     $(function(){
-        var nameList = [
-                'Time','Past','Future','Dev',
-                'Fly','Flying','Soar','Soaring','Power','Falling',
-                'Fall','Jump','Cliff','Mountain','Rend','Red','Blue',
-                'Green','Yellow','Gold','Demon','Demonic','Panda','Cat',
-                'Kitty','Kitten','Zero','Memory','Trooper','XX','Bandit',
-                'Fear','Light','Glow','Tread','Deep','Deeper','Deepest',
-                'Mine','Your','Worst','Enemy','Hostile','Force','Video',
-                'Game','Donkey','Mule','Colt','Cult','Cultist','Magnum',
-                'Gun','Assault','Recon','Trap','Trapper','Redeem','Code',
-                'Script','Writer','Near','Close','Open','Cube','Circle',
-                'Geo','Genome','Germ','Spaz','Shot','Echo','Beta','Alpha',
-                'Gamma','Omega','Seal','Squid','Money','Cash','Lord','King',
-                'Duke','Rest','Fire','Flame','Morrow','Break','Breaker','Numb',
-                'Ice','Cold','Rotten','Sick','Sickly','Janitor','Camel','Rooster',
-                'Sand','Desert','Dessert','Hurdle','Racer','Eraser','Erase','Big',
-                'Small','Short','Tall','Sith','Bounty','Hunter','Cracked','Broken',
-                'Sad','Happy','Joy','Joyful','Crimson','Destiny','Deceit','Lies',
-                'Lie','Honest','Destined','Bloxxer','Hawk','Eagle','Hawker','Walker',
-                'Zombie','Sarge','Capt','Captain','Punch','One','Two','Uno','Slice',
-                'Slash','Melt','Melted','Melting','Fell','Wolf','Hound',
-                'Legacy','Sharp','Dead','Mew','Chuckle','Bubba','Bubble','Sandwich','Smasher','Extreme','Multi','Universe','Ultimate','Death','Ready','Monkey','Elevator','Wrench','Grease','Head','Theme','Grand','Cool','Kid','Boy','Girl','Vortex','Paradox'
-            ]
-    var finalName = generate();
-    var finalNameIconMap = new Map();    
+    var user = /*[[${user}]]*/ null;
+    var finalName = user.nickName;
+    var id = user.id;
     $(".chat").niceScroll();
-    var mySocket = new WebSocket("ws://localhost:7070/chatroom/"+finalName);
+    var mySocket = new WebSocket("ws://localhost:7070/chatroom/"+id);
 
     mySocket.onopen = function(e){
         console.log(e);
@@ -49,7 +27,7 @@
         var input = $(".answer-add:first").find("input");
         var value = input.val();
         if(code==="Enter"){
-            sendMsg(value,finalName);
+            sendMsg(value);
         }
     })
 
@@ -62,25 +40,20 @@
         }else if(msg.type == "system"){
             systemMsg(msg.content);
         }else{
-            updateMsg(msg.msg,msg.nickName);
+            updateMsg(msg.id,msg.content,msg.name,msg.iconId);
         }
         console.log(e.data);
     }
         
-            function generate() {
-               var finalName = nameList[Math.floor( Math.random() * nameList.length )];
-               return finalName;
-            }
 
-    function addUser(name){
+    function addUser(name,iconid){
         var userDom = document.createElement("div");
         var userName = document.createElement("div");
         var iconDom = document.createElement("div");
         var imgNode = document.createElement("img");
         var statusNode = document.createElement("div");
         var moodDom = document.createElement("div");
-        var ranInt = Math.floor(Math.random() * 7) + 1;
-        imgNode.src = "https://bootdey.com/img/Content/avatar/avatar" + ranInt +".png";
+        imgNode.src = "https://bootdey.com/img/Content/avatar/avatar" + iconid +".png";
         iconDom.classList.add("avatar");
         statusNode.classList.add("status","online");
         iconDom.appendChild(imgNode)
@@ -93,18 +66,14 @@
         moodDom.classList.add("mood");
         moodDom.innerText="Hello World!";
         userDom.append(moodDom);
-        document.getElementById("userList").append(userDom);
-        finalNameIconMap.set(finalName,ranInt);
-        console.log(finalNameIconMap);
-
-        
+        document.getElementById("userList").append(userDom);        
     }
 
-    function updateMsg(msg,nickName){
+    function updateMsg(id,msg,nickName,iconid){
         var templateCode = `
-        <div class="answer ${nickName === finalName ? 'right' : 'left'}">
+        <div class="answer ${id === user.id ? 'right' : 'left'}">
                 <div class="avatar">
-                  <img src="https://bootdey.com/img/Content/avatar/avatar${finalNameIconMap.get(finalName)}.png" alt="User name">
+                  <img src="https://bootdey.com/img/Content/avatar/avatar${iconid}.png" alt="User name">
                   <div class="status offline"></div>
                 </div>
                 <div class="name">${nickName}</div>
@@ -120,8 +89,9 @@
 
     function updateOnlineUser(onlineUser){
         document.getElementById("userList").innerHTML = "";
-        $.each(onlineUser,function(index,name){
-            addUser(name);
+        $.each(onlineUser,function(index,value){
+          console.log(value);
+            addUser(value.name,value.iconId);
         });
     }
 
@@ -135,11 +105,8 @@
     $(".answer-add:first").before(template);
     }
 
-    function sendMsg(msg,nickName){
-        var data = new Object();
-        data.msg = msg;
-        data.nickName = nickName;
-        mySocket.send(JSON.stringify(data));
+    function sendMsg(msg){
+        mySocket.send(msg);
     }
 }) 
 </script>
